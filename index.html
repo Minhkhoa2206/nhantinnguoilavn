@@ -486,8 +486,6 @@ body::before{
     word-break:break-word;
 }
 
-/* LINK */
-
 .link{
 
     color:#93c5fd;
@@ -498,8 +496,6 @@ body::before{
 
     word-break:break-all;
 }
-
-/* IMAGE */
 
 .chat-image{
 
@@ -622,9 +618,8 @@ body::before{
         </div>
 
         <input
-            id="email"
-            type="email"
-            placeholder="Email"
+            id="username"
+            placeholder="Tên tài khoản"
         >
 
         <input
@@ -688,14 +683,6 @@ body::before{
                     id="status"
                 >
                     ● Đang kết nối...
-                </div>
-
-                <div
-                    class="status"
-                    id="totalUsers"
-                    style="color:#60a5fa"
-                >
-                    👥 0 người đã tham gia
                 </div>
 
             </div>
@@ -776,8 +763,6 @@ body::before{
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-
 <script>
 
 firebase.initializeApp({
@@ -793,18 +778,62 @@ appId: "1:137443244362:web:0cc219d93445d0d24269b3",
 });
 
 const db = firebase.database();
-const auth = firebase.auth();
+
+const authScreen =
+document.getElementById("authScreen");
+
+const usernameInput =
+document.getElementById("username");
+
+const passwordInput =
+document.getElementById("password");
+
+const loginBtn =
+document.getElementById("loginBtn");
+
+const registerBtn =
+document.getElementById("registerBtn");
+
+const messages =
+document.getElementById("messages");
+
+const sendBtn =
+document.getElementById("sendBtn");
+
+const heartBtn =
+document.getElementById("heartBtn");
+
+const nextBtn =
+document.getElementById("nextBtn");
+
+const messageInput =
+document.getElementById("messageInput");
+
+const statusEl =
+document.getElementById("status");
+
+const finding =
+document.getElementById("finding");
+
+const imageInput =
+document.getElementById("imageInput");
+
+const imageViewer =
+document.getElementById("imageViewer");
+
+const viewerImage =
+document.getElementById("viewerImage");
 
 const animals = [
-"🐶","🐱","🦊","🐼","🐸","🐵","🐰","🦁","🐯","🐨","🐻","🐹"
+"🐶","🐱","🦊","🐼","🐸",
+"🐵","🐰","🦁","🐯","🐨"
 ];
 
 const avatarColors = [
 "linear-gradient(135deg,#2563eb,#7c3aed)",
 "linear-gradient(135deg,#ec4899,#8b5cf6)",
 "linear-gradient(135deg,#06b6d4,#3b82f6)",
-"linear-gradient(135deg,#f97316,#ef4444)",
-"linear-gradient(135deg,#10b981,#14b8a6)"
+"linear-gradient(135deg,#f97316,#ef4444)"
 ];
 
 let myAnimal =
@@ -843,205 +872,13 @@ if(!myAvatarColor){
     );
 }
 
-const messages =
-document.getElementById("messages");
+let myId =
+localStorage.getItem(
+    "nova_user_id"
+);
 
-const sendBtn =
-document.getElementById("sendBtn");
-
-const heartBtn =
-document.getElementById("heartBtn");
-
-const nextBtn =
-document.getElementById("nextBtn");
-
-const messageInput =
-document.getElementById("messageInput");
-
-const statusEl =
-document.getElementById("status");
-
-const finding =
-document.getElementById("finding");
-
-const imageInput =
-document.getElementById("imageInput");
-
-const imageViewer =
-document.getElementById("imageViewer");
-
-const viewerImage =
-document.getElementById("viewerImage");
-
-const totalUsersEl =
-document.getElementById("totalUsers");
-
-const authScreen =
-document.getElementById("authScreen");
-
-const emailInput =
-document.getElementById("email");
-
-const passwordInput =
-document.getElementById("password");
-
-const loginBtn =
-document.getElementById("loginBtn");
-
-const registerBtn =
-document.getElementById("registerBtn");
-
-let myId = null;
 let roomId = null;
 let loaded = false;
-
-/* LOGIN */
-
-registerBtn.onclick =
-async ()=>{
-
-    const email =
-    emailInput.value.trim();
-
-    const password =
-    passwordInput.value.trim();
-
-    if(!email || !password){
-
-        return alert("Nhập đủ đi 😭");
-    }
-
-    try{
-
-        await auth
-        .createUserWithEmailAndPassword(
-            email,
-            password
-        );
-
-    }catch(err){
-
-        alert(err.message);
-    }
-
-};
-
-loginBtn.onclick =
-async ()=>{
-
-    const email =
-    emailInput.value.trim();
-
-    const password =
-    passwordInput.value.trim();
-
-    try{
-
-        await auth
-        .signInWithEmailAndPassword(
-            email,
-            password
-        );
-
-    }catch(err){
-
-        alert(err.message);
-    }
-
-};
-
-auth.onAuthStateChanged(
-async (user)=>{
-
-    if(user){
-
-        myId = user.uid;
-
-        authScreen.style.display =
-        "none";
-
-        roomId =
-        localStorage.getItem(
-            "nova_room_" + myId
-        );
-
-        const usedBefore =
-        localStorage.getItem(
-            "nova_used_" + myId
-        );
-
-        if(!usedBefore){
-
-            db.ref("system/totalUsers")
-            .transaction((c)=>(c||0)+1);
-
-            localStorage.setItem(
-                "nova_used_" + myId,
-                "1"
-            );
-        }
-
-        const ok =
-        await restoreRoom();
-
-        if(!ok){
-
-            findPartner();
-        }
-
-    }else{
-
-        authScreen.style.display =
-        "flex";
-    }
-
-});
-
-/* USERS */
-
-db.ref("system/totalUsers")
-.on("value",(snap)=>{
-
-    totalUsersEl.innerHTML =
-    "👥 " +
-    (snap.val() || 0) +
-    " người đã tham gia";
-});
-
-/* HEART */
-
-function spawnHearts(){
-
-    for(let i=0;i<80;i++){
-
-        const heart =
-        document.createElement("div");
-
-        heart.className =
-        "heart";
-
-        heart.innerHTML = "💖";
-
-        heart.style.left =
-        Math.random()*100+"vw";
-
-        heart.style.fontSize =
-        18+Math.random()*24+"px";
-
-        heart.style.animationDuration =
-        3+Math.random()*3+"s";
-
-        document.body.appendChild(
-            heart
-        );
-
-        setTimeout(()=>{
-
-            heart.remove();
-
-        },6000);
-    }
-}
 
 /* SAFE */
 
@@ -1069,7 +906,8 @@ function linkify(text){
 
         if(!href.startsWith("http")){
 
-            href = "https://" + href;
+            href =
+            "https://" + href;
         }
 
         return `
@@ -1082,6 +920,169 @@ function linkify(text){
         </a>
         `;
     });
+}
+
+/* REGISTER */
+
+registerBtn.onclick =
+async ()=>{
+
+    const username =
+    usernameInput.value.trim();
+
+    const password =
+    passwordInput.value.trim();
+
+    if(
+        !username ||
+        !password
+    ){
+
+        return alert("Nhập đủ đi 😭");
+    }
+
+    const snap =
+    await db.ref("users")
+    .orderByChild("username")
+    .equalTo(username)
+    .once("value");
+
+    if(snap.exists()){
+
+        return alert(
+            "Tên tồn tại 😭"
+        );
+    }
+
+    const uid =
+    "user_" +
+    Math.random()
+    .toString(36)
+    .slice(2);
+
+    await db.ref(
+        "users/" + uid
+    ).set({
+
+        username,
+        password,
+        createdAt:
+        Date.now()
+
+    });
+
+    localStorage.setItem(
+        "nova_user_id",
+        uid
+    );
+
+    myId = uid;
+
+    authScreen.style.display =
+    "none";
+
+    startSystem();
+};
+
+/* LOGIN */
+
+loginBtn.onclick =
+async ()=>{
+
+    const username =
+    usernameInput.value.trim();
+
+    const password =
+    passwordInput.value.trim();
+
+    const snap =
+    await db.ref("users")
+    .orderByChild("username")
+    .equalTo(username)
+    .once("value");
+
+    if(!snap.exists()){
+
+        return alert(
+            "Không tồn tại 😭"
+        );
+    }
+
+    let ok = false;
+
+    snap.forEach((s)=>{
+
+        const data =
+        s.val();
+
+        if(
+            data.password === password
+        ){
+
+            ok = true;
+
+            myId = s.key;
+        }
+
+    });
+
+    if(!ok){
+
+        return alert(
+            "Sai mật khẩu 😭"
+        );
+    }
+
+    localStorage.setItem(
+        "nova_user_id",
+        myId
+    );
+
+    authScreen.style.display =
+    "none";
+
+    startSystem();
+};
+
+/* AUTO LOGIN */
+
+async function autoLogin(){
+
+    if(!myId)
+    return;
+
+    const snap =
+    await db.ref(
+        "users/" + myId
+    ).once("value");
+
+    if(snap.exists()){
+
+        authScreen.style.display =
+        "none";
+
+        startSystem();
+    }
+}
+
+autoLogin();
+
+/* START */
+
+async function startSystem(){
+
+    roomId =
+    localStorage.getItem(
+        "nova_room_" + myId
+    );
+
+    const ok =
+    await restoreRoom();
+
+    if(!ok){
+
+        findPartner();
+    }
 }
 
 /* RESTORE */
@@ -1102,12 +1103,6 @@ async function restoreRoom(){
 
         return true;
     }
-
-    localStorage.removeItem(
-        "nova_room_" + myId
-    );
-
-    roomId = null;
 
     return false;
 }
@@ -1141,7 +1136,8 @@ async function findPartner(){
     if(found){
 
         roomId =
-        "room_" + Date.now();
+        "room_" +
+        Date.now();
 
         localStorage.setItem(
             "nova_room_" + myId,
@@ -1183,7 +1179,9 @@ async function findPartner(){
 
             async (s)=>{
 
-                if(s.key === myId){
+                if(
+                    s.key === myId
+                ){
 
                     const rooms =
                     await db.ref(
@@ -1207,7 +1205,8 @@ async function findPartner(){
 
                         ){
 
-                            roomId = r.key;
+                            roomId =
+                            r.key;
                         }
 
                     });
@@ -1262,37 +1261,6 @@ function startChat(){
     onlineRef.onDisconnect()
     .remove();
 
-    /* HEART */
-
-    db.ref(
-
-        "rooms/" +
-        roomId +
-        "/effects"
-
-    ).on(
-
-        "child_added",
-
-        (snap)=>{
-
-            const data =
-            snap.val();
-
-            if(
-                data &&
-                data.type === "heart"
-            ){
-
-                spawnHearts();
-            }
-
-        }
-
-    );
-
-    /* MESSAGE */
-
     db.ref(
 
         "rooms/" +
@@ -1314,12 +1282,14 @@ function startChat(){
             );
 
             row.className =
-            "row " +
-            (
-                data.user === myId
-                ? "me"
-                : ""
-            );
+
+                "row " +
+
+                (
+                    data.user === myId
+                    ? "me"
+                    : ""
+                );
 
             row.innerHTML = `
 
@@ -1333,7 +1303,7 @@ function startChat(){
                     ${data.avatarColor}
                     "
                 >
-                    ${data.animal || "🐵"}
+                    ${data.animal}
                 </div>
 
                 <div class="msg">
@@ -1383,35 +1353,6 @@ function startChat(){
 
         }
 
-    );
-
-    /* ONLINE */
-
-    db.ref(
-        "rooms/" +
-        roomId +
-        "/online"
-    ).on(
-        "value",
-        async (snap)=>{
-
-            const online = snap.val();
-
-            if(
-                online &&
-                Object.keys(online).length >= 2
-            ){
-
-                statusEl.innerHTML =
-                "● Đã kết nối";
-
-            }else{
-
-                statusEl.innerHTML =
-                "● Người kia đã thoát 😢";
-            }
-
-        }
     );
 
 }
@@ -1474,11 +1415,46 @@ messageInput.addEventListener(
 
 /* HEART */
 
+function spawnHearts(){
+
+    for(let i=0;i<60;i++){
+
+        const heart =
+        document.createElement("div");
+
+        heart.className =
+        "heart";
+
+        heart.innerHTML = "💖";
+
+        heart.style.left =
+        Math.random()*100+"vw";
+
+        heart.style.fontSize =
+        18+Math.random()*22+"px";
+
+        heart.style.animationDuration =
+        3+Math.random()*3+"s";
+
+        document.body.appendChild(
+            heart
+        );
+
+        setTimeout(()=>{
+
+            heart.remove();
+
+        },6000);
+    }
+}
+
 heartBtn.onclick =
 function(){
 
     if(!roomId)
     return;
+
+    spawnHearts();
 
     db.ref(
 
@@ -1490,13 +1466,49 @@ function(){
 
         type:"heart",
 
-        user:myId,
-
         time:Date.now()
 
     });
 
 };
+
+db.ref("rooms")
+.on(
+
+    "child_added",
+
+    (room)=>{
+
+        db.ref(
+
+            "rooms/" +
+            room.key +
+            "/effects"
+
+        ).on(
+
+            "child_added",
+
+            (snap)=>{
+
+                const data =
+                snap.val();
+
+                if(
+                    data &&
+                    data.type === "heart"
+                ){
+
+                    spawnHearts();
+                }
+
+            }
+
+        );
+
+    }
+
+);
 
 /* IMAGE */
 
@@ -1571,12 +1583,8 @@ async function(){
         await db.ref(
 
             "rooms/" +
-            roomId +
-            "/online/" +
-            myId
-
+            roomId
         ).remove();
-
     }
 
     localStorage.removeItem(
@@ -1606,41 +1614,6 @@ function(){
     imageViewer.style.display =
     "none";
 };
-
-/* AUTO CLEAN */
-
-setInterval(async ()=>{
-
-    const waiting =
-    await db.ref(
-        "waitingUsers"
-    ).once("value");
-
-    waiting.forEach((s)=>{
-
-        const data =
-        s.val();
-
-        if(
-
-            !data ||
-
-            Date.now() -
-            data.time >
-
-            1000 * 60 * 5
-
-        ){
-
-            db.ref(
-                "waitingUsers/" +
-                s.key
-            ).remove();
-        }
-
-    });
-
-},30000);
 
 </script>
 
