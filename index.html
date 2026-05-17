@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta charset="UTF-8"/>
+<meta
+name="viewport"
+content="
+width=device-width,
+initial-scale=1,
+viewport-fit=cover
+"
+/>
 
 <title>Nova Stranger</title>
 
@@ -24,7 +31,8 @@ rel="stylesheet"
     font-family:Inter,sans-serif;
 }
 
-html,body{
+html,
+body{
     width:100%;
     height:100%;
     overflow:hidden;
@@ -218,6 +226,32 @@ body::before{
         transform:rotate(360deg);
     }
 
+}
+
+.finding-logout{
+
+    margin-top:10px;
+
+    height:52px;
+
+    padding:0 22px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #334155,
+        #0f172a
+    );
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
 }
 
 /* HEART */
@@ -654,7 +688,16 @@ body::before{
         Đang tìm người lạ...
     </div>
 
+    <button
+        id="findingLogoutBtn"
+        class="finding-logout"
+    >
+        Logout
+    </button>
+
 </div>
+
+<!-- APP -->
 
 <div class="app">
 
@@ -752,6 +795,8 @@ body::before{
 
 </div>
 
+<!-- IMAGE VIEW -->
+
 <div
     id="imageViewer"
     class="image-viewer"
@@ -800,6 +845,9 @@ document.getElementById("registerBtn");
 
 const logoutBtn =
 document.getElementById("logoutBtn");
+
+const findingLogoutBtn =
+document.getElementById("findingLogoutBtn");
 
 const messages =
 document.getElementById("messages");
@@ -1575,8 +1623,7 @@ async function(){
 
 /* LOGOUT */
 
-logoutBtn.onclick =
-function(){
+function logoutNow(){
 
     localStorage.removeItem(
         "nova_logged_in"
@@ -1591,7 +1638,13 @@ function(){
     );
 
     location.reload();
-};
+}
+
+logoutBtn.onclick =
+logoutNow;
+
+findingLogoutBtn.onclick =
+logoutNow;
 
 /* IMAGE VIEW */
 
