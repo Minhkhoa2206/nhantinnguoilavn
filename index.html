@@ -23,8 +23,6 @@ rel="stylesheet"
 
 :root{
     --bg:#020617;
-    --blue:#2563eb;
-    --blue2:#7c3aed;
 }
 
 *{
@@ -233,7 +231,7 @@ body::before{
 
     z-index:999999;
 
-    display:flex;
+    display:none;
     flex-direction:column;
 
     align-items:center;
@@ -346,9 +344,29 @@ body::before{
     margin-top:2px;
 }
 
-.next-btn{
+.top-actions{
+    display:flex;
+    gap:8px;
+}
+
+.top-btn{
 
     border:none;
+
+    color:white;
+
+    height:44px;
+
+    padding:0 16px;
+
+    border-radius:14px;
+
+    cursor:pointer;
+
+    font-weight:700;
+}
+
+.next-btn{
 
     background:
     linear-gradient(
@@ -356,18 +374,16 @@ body::before{
         #dc2626,
         #b91c1c
     );
+}
 
-    color:white;
+.logout-btn{
 
-    height:46px;
-
-    padding:0 18px;
-
-    border-radius:16px;
-
-    cursor:pointer;
-
-    font-weight:700;
+    background:
+    linear-gradient(
+        135deg,
+        #334155,
+        #0f172a
+    );
 }
 
 /* MESSAGE */
@@ -423,28 +439,6 @@ body::before{
 
     border:
     2px solid rgba(255,255,255,.15);
-
-    box-shadow:
-    0 0 16px rgba(124,58,237,.35);
-
-    animation:
-    avatarFloat 3s ease-in-out infinite;
-}
-
-@keyframes avatarFloat{
-
-    0%{
-        transform:translateY(0px);
-    }
-
-    50%{
-        transform:translateY(-3px);
-    }
-
-    100%{
-        transform:translateY(0px);
-    }
-
 }
 
 /* CHAT BOX */
@@ -682,19 +676,30 @@ body::before{
                     class="status"
                     id="status"
                 >
-                    ● Đang kết nối...
+                    ● Offline
                 </div>
 
             </div>
 
         </div>
 
-        <button
-            id="nextBtn"
-            class="next-btn"
-        >
-            Next
-        </button>
+        <div class="top-actions">
+
+            <button
+                id="logoutBtn"
+                class="top-btn logout-btn"
+            >
+                Logout
+            </button>
+
+            <button
+                id="nextBtn"
+                class="top-btn next-btn"
+            >
+                Next
+            </button>
+
+        </div>
 
     </div>
 
@@ -794,6 +799,9 @@ document.getElementById("loginBtn");
 const registerBtn =
 document.getElementById("registerBtn");
 
+const logoutBtn =
+document.getElementById("logoutBtn");
+
 const messages =
 document.getElementById("messages");
 
@@ -875,6 +883,11 @@ if(!myAvatarColor){
 let myId =
 localStorage.getItem(
     "nova_user_id"
+);
+
+let loggedIn =
+localStorage.getItem(
+    "nova_logged_in"
 );
 
 let roomId = null;
@@ -971,17 +984,9 @@ async ()=>{
 
     });
 
-    localStorage.setItem(
-        "nova_user_id",
-        uid
+    alert(
+        "Tạo tài khoản thành công ✨"
     );
-
-    myId = uid;
-
-    authScreen.style.display =
-    "none";
-
-    startSystem();
 };
 
 /* LOGIN */
@@ -1038,6 +1043,11 @@ async ()=>{
         myId
     );
 
+    localStorage.setItem(
+        "nova_logged_in",
+        "1"
+    );
+
     authScreen.style.display =
     "none";
 
@@ -1048,8 +1058,10 @@ async ()=>{
 
 async function autoLogin(){
 
-    if(!myId)
-    return;
+    if(
+        !myId ||
+        !loggedIn
+    ) return;
 
     const snap =
     await db.ref(
@@ -1455,60 +1467,7 @@ function(){
     return;
 
     spawnHearts();
-
-    db.ref(
-
-        "rooms/" +
-        roomId +
-        "/effects"
-
-    ).push({
-
-        type:"heart",
-
-        time:Date.now()
-
-    });
-
 };
-
-db.ref("rooms")
-.on(
-
-    "child_added",
-
-    (room)=>{
-
-        db.ref(
-
-            "rooms/" +
-            room.key +
-            "/effects"
-
-        ).on(
-
-            "child_added",
-
-            (snap)=>{
-
-                const data =
-                snap.val();
-
-                if(
-                    data &&
-                    data.type === "heart"
-                ){
-
-                    spawnHearts();
-                }
-
-            }
-
-        );
-
-    }
-
-);
 
 /* IMAGE */
 
@@ -1581,14 +1540,28 @@ async function(){
     if(roomId){
 
         await db.ref(
-
-            "rooms/" +
-            roomId
+            "rooms/" + roomId
         ).remove();
     }
 
     localStorage.removeItem(
         "nova_room_" + myId
+    );
+
+    location.reload();
+};
+
+/* LOGOUT */
+
+logoutBtn.onclick =
+function(){
+
+    localStorage.removeItem(
+        "nova_logged_in"
+    );
+
+    localStorage.removeItem(
+        "nova_user_id"
     );
 
     location.reload();
