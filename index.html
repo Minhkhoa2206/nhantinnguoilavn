@@ -1,16 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-
-<meta
-name="viewport"
-content="
-width=device-width,
-initial-scale=1,
-viewport-fit=cover
-"
-/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 
 <title>Nova Stranger</title>
 
@@ -49,6 +41,45 @@ body{
 body{
     color:white;
     position:relative;
+}
+
+/* STARS */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+    inset:0;
+
+    background-image:
+    radial-gradient(white 1px, transparent 1px),
+    radial-gradient(#60a5fa 1px, transparent 1px),
+    radial-gradient(#a855f7 1px, transparent 1px);
+
+    background-size:
+    120px 120px,
+    180px 180px,
+    240px 240px;
+
+    opacity:.18;
+
+    animation:
+    starsMove 60s linear infinite;
+
+    pointer-events:none;
+}
+
+@keyframes starsMove{
+
+    from{
+        transform:translateY(0);
+    }
+
+    to{
+        transform:translateY(-120px);
+    }
+
 }
 
 /* AUTH */
@@ -95,8 +126,6 @@ body{
     font-size:30px;
     font-weight:800;
     text-align:center;
-
-    margin-bottom:8px;
 }
 
 .auth-box input{
@@ -138,83 +167,6 @@ body{
         #2563eb,
         #7c3aed
     );
-}
-
-/* STARS */
-
-body::before{
-
-    content:"";
-
-    position:fixed;
-    inset:0;
-
-    background-image:
-    radial-gradient(white 1px, transparent 1px),
-    radial-gradient(#60a5fa 1px, transparent 1px),
-    radial-gradient(#a855f7 1px, transparent 1px);
-
-    background-size:
-    120px 120px,
-    180px 180px,
-    240px 240px;
-
-    opacity:.18;
-
-    animation:
-    starsMove 60s linear infinite;
-
-    pointer-events:none;
-}
-
-@keyframes starsMove{
-
-    from{
-        transform:translateY(0);
-    }
-
-    to{
-        transform:translateY(-120px);
-    }
-
-}
-
-/* HEART */
-
-.heart{
-
-    position:fixed;
-
-    top:-50px;
-
-    pointer-events:none;
-
-    z-index:999999;
-
-    animation:
-    heartFall linear forwards;
-}
-
-@keyframes heartFall{
-
-    from{
-
-        transform:
-        translateY(-50px)
-        rotate(0deg);
-
-        opacity:1;
-    }
-
-    to{
-
-        transform:
-        translateY(110vh)
-        rotate(360deg);
-
-        opacity:0;
-    }
-
 }
 
 /* FINDING */
@@ -267,6 +219,32 @@ body::before{
         transform:rotate(360deg);
     }
 
+}
+
+.finding-logout{
+
+    margin-top:10px;
+
+    height:52px;
+
+    padding:0 22px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:
+    linear-gradient(
+        135deg,
+        #334155,
+        #0f172a
+    );
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
 }
 
 /* APP */
@@ -420,8 +398,6 @@ body::before{
     flex-direction:row-reverse;
 }
 
-/* AVATAR */
-
 .avatar{
 
     width:42px;
@@ -440,8 +416,6 @@ body::before{
     border:
     2px solid rgba(255,255,255,.15);
 }
-
-/* CHAT BOX */
 
 .msg{
 
@@ -469,6 +443,17 @@ body::before{
         #2563eb,
         #7c3aed
     );
+}
+
+.username{
+
+    font-size:12px;
+
+    font-weight:700;
+
+    margin-bottom:6px;
+
+    color:#cbd5e1;
 }
 
 .text{
@@ -654,7 +639,16 @@ body::before{
         Đang tìm người lạ...
     </div>
 
+    <button
+        id="findingLogoutBtn"
+        class="finding-logout"
+    >
+        Logout
+    </button>
+
 </div>
+
+<!-- APP -->
 
 <div class="app">
 
@@ -733,13 +727,6 @@ body::before{
             >
 
             <button
-                id="heartBtn"
-                class="send-btn"
-            >
-                💖
-            </button>
-
-            <button
                 id="sendBtn"
                 class="send-btn"
             >
@@ -751,6 +738,8 @@ body::before{
     </div>
 
 </div>
+
+<!-- IMAGE VIEW -->
 
 <div
     id="imageViewer"
@@ -765,7 +754,6 @@ body::before{
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
 <script>
@@ -802,14 +790,14 @@ document.getElementById("registerBtn");
 const logoutBtn =
 document.getElementById("logoutBtn");
 
+const findingLogoutBtn =
+document.getElementById("findingLogoutBtn");
+
 const messages =
 document.getElementById("messages");
 
 const sendBtn =
 document.getElementById("sendBtn");
-
-const heartBtn =
-document.getElementById("heartBtn");
 
 const nextBtn =
 document.getElementById("nextBtn");
@@ -883,6 +871,11 @@ if(!myAvatarColor){
 let myId =
 localStorage.getItem(
     "nova_user_id"
+);
+
+let myUsername =
+localStorage.getItem(
+    "nova_username"
 );
 
 let loggedIn =
@@ -1027,6 +1020,9 @@ async ()=>{
             ok = true;
 
             myId = s.key;
+
+            myUsername =
+            data.username;
         }
 
     });
@@ -1044,12 +1040,19 @@ async ()=>{
     );
 
     localStorage.setItem(
+        "nova_username",
+        myUsername
+    );
+
+    localStorage.setItem(
         "nova_logged_in",
         "1"
     );
 
     authScreen.style.display =
     "none";
+
+    await loadMyMessages();
 
     startSystem();
 };
@@ -1073,11 +1076,43 @@ async function autoLogin(){
         authScreen.style.display =
         "none";
 
+        await loadMyMessages();
+
         startSystem();
     }
 }
 
 autoLogin();
+
+/* LOAD ACCOUNT MESSAGES */
+
+async function loadMyMessages(){
+
+    const snap =
+    await db.ref(
+
+        "user_messages/" +
+        myId
+
+    ).once("value");
+
+    if(!snap.exists())
+    return;
+
+    messages.innerHTML = "";
+
+    snap.forEach((s)=>{
+
+        renderMessage(
+            s.val(),
+            true
+        );
+
+    });
+
+    messages.scrollTop =
+    messages.scrollHeight;
+}
 
 /* START */
 
@@ -1243,6 +1278,94 @@ async function findPartner(){
 
 }
 
+/* RENDER */
+
+function renderMessage(
+    data,
+    forceMe = false
+){
+
+    const row =
+    document.createElement(
+        "div"
+    );
+
+    row.className =
+
+        "row " +
+
+        (
+            data.user === myId ||
+            forceMe
+            ? "me"
+            : ""
+        );
+
+    row.innerHTML = `
+
+    <div class="msg-wrap">
+
+        <div
+            class="avatar"
+
+            style="
+            background:
+            ${data.avatarColor}
+            "
+        >
+            ${data.animal}
+        </div>
+
+        <div class="msg">
+
+            <div class="username">
+                ${data.username || "Ẩn danh"}
+            </div>
+
+            ${
+                data.text
+                ?
+                `
+                <div class="text">
+                    ${linkify(data.text)}
+                </div>
+                `
+                :
+                ""
+            }
+
+            ${
+                data.image
+                ?
+                `
+                <img
+                    src="${data.image}"
+                    class="chat-image"
+                    onclick="
+                        openImageViewer(
+                            '${data.image}'
+                        )
+                    "
+                >
+                `
+                :
+                ""
+            }
+
+        </div>
+
+    </div>
+
+    `;
+
+    messages.appendChild(
+        row
+    );
+
+    messages.scrollTop =
+    messages.scrollHeight;
+}
+
 /* CHAT */
 
 function startChat(){
@@ -1257,21 +1380,6 @@ function startChat(){
 
     statusEl.innerHTML =
     "● Đã kết nối";
-
-    const onlineRef =
-    db.ref(
-
-        "rooms/" +
-        roomId +
-        "/online/" +
-        myId
-
-    );
-
-    onlineRef.set(true);
-
-    onlineRef.onDisconnect()
-    .remove();
 
     db.ref(
 
@@ -1288,80 +1396,7 @@ function startChat(){
             const data =
             snapshot.val();
 
-            const row =
-            document.createElement(
-                "div"
-            );
-
-            row.className =
-
-                "row " +
-
-                (
-                    data.user === myId
-                    ? "me"
-                    : ""
-                );
-
-            row.innerHTML = `
-
-            <div class="msg-wrap">
-
-                <div
-                    class="avatar"
-
-                    style="
-                    background:
-                    ${data.avatarColor}
-                    "
-                >
-                    ${data.animal}
-                </div>
-
-                <div class="msg">
-
-                    ${
-                        data.text
-                        ?
-                        `
-                        <div class="text">
-                            ${linkify(data.text)}
-                        </div>
-                        `
-                        :
-                        ""
-                    }
-
-                    ${
-                        data.image
-                        ?
-                        `
-                        <img
-                            src="${data.image}"
-                            class="chat-image"
-                            onclick="
-                                openImageViewer(
-                                    '${data.image}'
-                                )
-                            "
-                        >
-                        `
-                        :
-                        ""
-                    }
-
-                </div>
-
-            </div>
-
-            `;
-
-            messages.appendChild(
-                row
-            );
-
-            messages.scrollTop =
-            messages.scrollHeight;
+            renderMessage(data);
 
         }
 
@@ -1381,15 +1416,12 @@ function sendMessage(){
         !roomId
     ) return;
 
-    db.ref(
-
-        "rooms/" +
-        roomId +
-        "/messages"
-
-    ).push({
+    const msgData = {
 
         text:text,
+
+        username:
+        myUsername,
 
         user:myId,
 
@@ -1398,9 +1430,27 @@ function sendMessage(){
         avatarColor:
         myAvatarColor,
 
+        roomId:
+        roomId,
+
         time:Date.now()
 
-    });
+    };
+
+    db.ref(
+
+        "rooms/" +
+        roomId +
+        "/messages"
+
+    ).push(msgData);
+
+    db.ref(
+
+        "user_messages/" +
+        myId
+
+    ).push(msgData);
 
     messageInput.value = "";
 }
@@ -1424,50 +1474,6 @@ messageInput.addEventListener(
     }
 
 );
-
-/* HEART */
-
-function spawnHearts(){
-
-    for(let i=0;i<60;i++){
-
-        const heart =
-        document.createElement("div");
-
-        heart.className =
-        "heart";
-
-        heart.innerHTML = "💖";
-
-        heart.style.left =
-        Math.random()*100+"vw";
-
-        heart.style.fontSize =
-        18+Math.random()*22+"px";
-
-        heart.style.animationDuration =
-        3+Math.random()*3+"s";
-
-        document.body.appendChild(
-            heart
-        );
-
-        setTimeout(()=>{
-
-            heart.remove();
-
-        },6000);
-    }
-}
-
-heartBtn.onclick =
-function(){
-
-    if(!roomId)
-    return;
-
-    spawnHearts();
-};
 
 /* IMAGE */
 
@@ -1500,16 +1506,13 @@ imageInput.addEventListener(
 
         function(e){
 
-            db.ref(
-
-                "rooms/" +
-                roomId +
-                "/messages"
-
-            ).push({
+            const msgData = {
 
                 image:
                 e.target.result,
+
+                username:
+                myUsername,
 
                 user:myId,
 
@@ -1518,9 +1521,27 @@ imageInput.addEventListener(
                 avatarColor:
                 myAvatarColor,
 
+                roomId:
+                roomId,
+
                 time:Date.now()
 
-            });
+            };
+
+            db.ref(
+
+                "rooms/" +
+                roomId +
+                "/messages"
+
+            ).push(msgData);
+
+            db.ref(
+
+                "user_messages/" +
+                myId
+
+            ).push(msgData);
 
         };
 
@@ -1537,13 +1558,6 @@ imageInput.addEventListener(
 nextBtn.onclick =
 async function(){
 
-    if(roomId){
-
-        await db.ref(
-            "rooms/" + roomId
-        ).remove();
-    }
-
     localStorage.removeItem(
         "nova_room_" + myId
     );
@@ -1553,8 +1567,7 @@ async function(){
 
 /* LOGOUT */
 
-logoutBtn.onclick =
-function(){
+function logoutNow(){
 
     localStorage.removeItem(
         "nova_logged_in"
@@ -1564,8 +1577,18 @@ function(){
         "nova_user_id"
     );
 
+    localStorage.removeItem(
+        "nova_username"
+    );
+
     location.reload();
-};
+}
+
+logoutBtn.onclick =
+logoutNow;
+
+findingLogoutBtn.onclick =
+logoutNow;
 
 /* IMAGE VIEW */
 
@@ -1581,7 +1604,6 @@ function(src){
 };
 
 imageViewer.onclick =
-
 function(){
 
     imageViewer.style.display =
