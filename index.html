@@ -2,14 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
-<meta
-name="viewport"
-content="
-width=device-width,
-initial-scale=1,
-viewport-fit=cover
-"
-/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 
 <title>Nova Stranger</title>
 
@@ -254,44 +247,6 @@ body::before{
     cursor:pointer;
 }
 
-/* HEART */
-
-.heart{
-
-    position:fixed;
-
-    top:-50px;
-
-    pointer-events:none;
-
-    z-index:999999;
-
-    animation:
-    heartFall linear forwards;
-}
-
-@keyframes heartFall{
-
-    from{
-
-        transform:
-        translateY(-50px)
-        rotate(0deg);
-
-        opacity:1;
-    }
-
-    to{
-
-        transform:
-        translateY(110vh)
-        rotate(360deg);
-
-        opacity:0;
-    }
-
-}
-
 /* APP */
 
 .app{
@@ -443,8 +398,6 @@ body::before{
     flex-direction:row-reverse;
 }
 
-/* AVATAR */
-
 .avatar{
 
     width:42px;
@@ -463,8 +416,6 @@ body::before{
     border:
     2px solid rgba(255,255,255,.15);
 }
-
-/* CHAT BOX */
 
 .msg{
 
@@ -776,13 +727,6 @@ body::before{
             >
 
             <button
-                id="heartBtn"
-                class="send-btn"
-            >
-                💖
-            </button>
-
-            <button
                 id="sendBtn"
                 class="send-btn"
             >
@@ -854,9 +798,6 @@ document.getElementById("messages");
 
 const sendBtn =
 document.getElementById("sendBtn");
-
-const heartBtn =
-document.getElementById("heartBtn");
 
 const nextBtn =
 document.getElementById("nextBtn");
@@ -1111,6 +1052,8 @@ async ()=>{
     authScreen.style.display =
     "none";
 
+    await loadMyMessages();
+
     startSystem();
 };
 
@@ -1133,11 +1076,43 @@ async function autoLogin(){
         authScreen.style.display =
         "none";
 
+        await loadMyMessages();
+
         startSystem();
     }
 }
 
 autoLogin();
+
+/* LOAD ACCOUNT MESSAGES */
+
+async function loadMyMessages(){
+
+    const snap =
+    await db.ref(
+
+        "user_messages/" +
+        myId
+
+    ).once("value");
+
+    if(!snap.exists())
+    return;
+
+    messages.innerHTML = "";
+
+    snap.forEach((s)=>{
+
+        renderMessage(
+            s.val(),
+            true
+        );
+
+    });
+
+    messages.scrollTop =
+    messages.scrollHeight;
+}
 
 /* START */
 
@@ -1303,6 +1278,94 @@ async function findPartner(){
 
 }
 
+/* RENDER */
+
+function renderMessage(
+    data,
+    forceMe = false
+){
+
+    const row =
+    document.createElement(
+        "div"
+    );
+
+    row.className =
+
+        "row " +
+
+        (
+            data.user === myId ||
+            forceMe
+            ? "me"
+            : ""
+        );
+
+    row.innerHTML = `
+
+    <div class="msg-wrap">
+
+        <div
+            class="avatar"
+
+            style="
+            background:
+            ${data.avatarColor}
+            "
+        >
+            ${data.animal}
+        </div>
+
+        <div class="msg">
+
+            <div class="username">
+                ${data.username || "Ẩn danh"}
+            </div>
+
+            ${
+                data.text
+                ?
+                `
+                <div class="text">
+                    ${linkify(data.text)}
+                </div>
+                `
+                :
+                ""
+            }
+
+            ${
+                data.image
+                ?
+                `
+                <img
+                    src="${data.image}"
+                    class="chat-image"
+                    onclick="
+                        openImageViewer(
+                            '${data.image}'
+                        )
+                    "
+                >
+                `
+                :
+                ""
+            }
+
+        </div>
+
+    </div>
+
+    `;
+
+    messages.appendChild(
+        row
+    );
+
+    messages.scrollTop =
+    messages.scrollHeight;
+}
+
 /* CHAT */
 
 function startChat(){
@@ -1317,21 +1380,6 @@ function startChat(){
 
     statusEl.innerHTML =
     "● Đã kết nối";
-
-    const onlineRef =
-    db.ref(
-
-        "rooms/" +
-        roomId +
-        "/online/" +
-        myId
-
-    );
-
-    onlineRef.set(true);
-
-    onlineRef.onDisconnect()
-    .remove();
 
     db.ref(
 
@@ -1348,84 +1396,7 @@ function startChat(){
             const data =
             snapshot.val();
 
-            const row =
-            document.createElement(
-                "div"
-            );
-
-            row.className =
-
-                "row " +
-
-                (
-                    data.user === myId
-                    ? "me"
-                    : ""
-                );
-
-            row.innerHTML = `
-
-            <div class="msg-wrap">
-
-                <div
-                    class="avatar"
-
-                    style="
-                    background:
-                    ${data.avatarColor}
-                    "
-                >
-                    ${data.animal}
-                </div>
-
-                <div class="msg">
-
-                    <div class="username">
-                        ${data.username || "Ẩn danh"}
-                    </div>
-
-                    ${
-                        data.text
-                        ?
-                        `
-                        <div class="text">
-                            ${linkify(data.text)}
-                        </div>
-                        `
-                        :
-                        ""
-                    }
-
-                    ${
-                        data.image
-                        ?
-                        `
-                        <img
-                            src="${data.image}"
-                            class="chat-image"
-                            onclick="
-                                openImageViewer(
-                                    '${data.image}'
-                                )
-                            "
-                        >
-                        `
-                        :
-                        ""
-                    }
-
-                </div>
-
-            </div>
-
-            `;
-
-            messages.appendChild(
-                row
-            );
-
-            messages.scrollTop =
-            messages.scrollHeight;
+            renderMessage(data);
 
         }
 
@@ -1445,13 +1416,7 @@ function sendMessage(){
         !roomId
     ) return;
 
-    db.ref(
-
-        "rooms/" +
-        roomId +
-        "/messages"
-
-    ).push({
+    const msgData = {
 
         text:text,
 
@@ -1465,9 +1430,27 @@ function sendMessage(){
         avatarColor:
         myAvatarColor,
 
+        roomId:
+        roomId,
+
         time:Date.now()
 
-    });
+    };
+
+    db.ref(
+
+        "rooms/" +
+        roomId +
+        "/messages"
+
+    ).push(msgData);
+
+    db.ref(
+
+        "user_messages/" +
+        myId
+
+    ).push(msgData);
 
     messageInput.value = "";
 }
@@ -1491,50 +1474,6 @@ messageInput.addEventListener(
     }
 
 );
-
-/* HEART */
-
-function spawnHearts(){
-
-    for(let i=0;i<60;i++){
-
-        const heart =
-        document.createElement("div");
-
-        heart.className =
-        "heart";
-
-        heart.innerHTML = "💖";
-
-        heart.style.left =
-        Math.random()*100+"vw";
-
-        heart.style.fontSize =
-        18+Math.random()*22+"px";
-
-        heart.style.animationDuration =
-        3+Math.random()*3+"s";
-
-        document.body.appendChild(
-            heart
-        );
-
-        setTimeout(()=>{
-
-            heart.remove();
-
-        },6000);
-    }
-}
-
-heartBtn.onclick =
-function(){
-
-    if(!roomId)
-    return;
-
-    spawnHearts();
-};
 
 /* IMAGE */
 
@@ -1567,13 +1506,7 @@ imageInput.addEventListener(
 
         function(e){
 
-            db.ref(
-
-                "rooms/" +
-                roomId +
-                "/messages"
-
-            ).push({
+            const msgData = {
 
                 image:
                 e.target.result,
@@ -1588,9 +1521,27 @@ imageInput.addEventListener(
                 avatarColor:
                 myAvatarColor,
 
+                roomId:
+                roomId,
+
                 time:Date.now()
 
-            });
+            };
+
+            db.ref(
+
+                "rooms/" +
+                roomId +
+                "/messages"
+
+            ).push(msgData);
+
+            db.ref(
+
+                "user_messages/" +
+                myId
+
+            ).push(msgData);
 
         };
 
@@ -1606,13 +1557,6 @@ imageInput.addEventListener(
 
 nextBtn.onclick =
 async function(){
-
-    if(roomId){
-
-        await db.ref(
-            "rooms/" + roomId
-        ).remove();
-    }
 
     localStorage.removeItem(
         "nova_room_" + myId
@@ -1660,7 +1604,6 @@ function(src){
 };
 
 imageViewer.onclick =
-
 function(){
 
     imageViewer.style.display =
