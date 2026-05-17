@@ -1,18 +1,16 @@
+# Nova Stranger - Full Realtime Chat App
+
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-
 <title>Nova Stranger</title>
 
-<link
-href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-rel="stylesheet"
-/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 
 <style>
-
 :root{
     --bg:#020617;
 }
@@ -24,18 +22,11 @@ rel="stylesheet"
     font-family:Inter,sans-serif;
 }
 
-html,
-body{
+html,body{
     width:100%;
     height:100%;
     overflow:hidden;
-
-    background:
-    radial-gradient(
-        circle at top,
-        #0f172a,
-        #020617
-    );
+    background:radial-gradient(circle at top,#0f172a,#020617);
 }
 
 body{
@@ -43,239 +34,152 @@ body{
     position:relative;
 }
 
-/* STARS */
-
 body::before{
-
     content:"";
-
     position:fixed;
     inset:0;
-
     background-image:
     radial-gradient(white 1px, transparent 1px),
     radial-gradient(#60a5fa 1px, transparent 1px),
     radial-gradient(#a855f7 1px, transparent 1px);
-
-    background-size:
-    120px 120px,
-    180px 180px,
-    240px 240px;
-
+    background-size:120px 120px,180px 180px,240px 240px;
     opacity:.18;
-
-    animation:
-    starsMove 60s linear infinite;
-
+    animation:starsMove 60s linear infinite;
     pointer-events:none;
 }
 
 @keyframes starsMove{
-
-    from{
-        transform:translateY(0);
-    }
-
-    to{
-        transform:translateY(-120px);
-    }
-
+    from{transform:translateY(0)}
+    to{transform:translateY(-120px)}
 }
 
-/* AUTH */
+*::-webkit-scrollbar{
+    width:0;
+}
 
 .auth-screen{
-
     position:fixed;
     inset:0;
-
     background:#020617;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
     z-index:99999999;
 }
 
 .auth-box{
-
     width:90%;
     max-width:360px;
-
-    background:
-    rgba(15,23,42,.92);
-
-    border:
-    1px solid rgba(255,255,255,.08);
-
+    background:rgba(15,23,42,.92);
+    border:1px solid rgba(255,255,255,.08);
     border-radius:28px;
-
     padding:24px;
-
     display:flex;
     flex-direction:column;
-
     gap:14px;
-
     backdrop-filter:blur(20px);
 }
 
 .auth-title{
-
     font-size:30px;
     font-weight:800;
     text-align:center;
 }
 
 .auth-box input{
-
     height:54px;
-
     border:none;
     outline:none;
-
     border-radius:16px;
-
     padding:0 14px;
-
-    background:
-    rgba(255,255,255,.06);
-
+    background:rgba(255,255,255,.06);
     color:white;
-
     font-size:15px;
 }
 
 .auth-btn{
-
     height:54px;
-
     border:none;
-
     border-radius:16px;
-
     color:white;
-
     font-weight:700;
-
     cursor:pointer;
-
-    background:
-    linear-gradient(
-        135deg,
-        #2563eb,
-        #7c3aed
-    );
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
 }
 
-/* FINDING */
-
 .finding{
-
     position:fixed;
     inset:0;
-
-    background:
-    rgba(2,6,23,.95);
-
+    background:rgba(2,6,23,.95);
     backdrop-filter:blur(10px);
-
     z-index:999999;
-
     display:none;
     flex-direction:column;
-
     align-items:center;
     justify-content:center;
-
     gap:18px;
 }
 
 .loader{
-
     width:90px;
     height:90px;
-
     border-radius:50%;
-
-    border:
-    5px solid rgba(255,255,255,.1);
-
-    border-top:
-    5px solid #7c3aed;
-
-    animation:
-    spin 1s linear infinite;
+    border:5px solid rgba(255,255,255,.1);
+    border-top:5px solid #7c3aed;
+    animation:spin 1s linear infinite;
 }
 
 @keyframes spin{
-
-    from{
-        transform:rotate(0);
-    }
-
-    to{
-        transform:rotate(360deg);
-    }
-
+    from{transform:rotate(0)}
+    to{transform:rotate(360deg)}
 }
 
 .finding-logout{
-
     margin-top:10px;
-
     height:52px;
-
     padding:0 22px;
-
     border:none;
-
     border-radius:16px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #334155,
-        #0f172a
-    );
-
+    background:linear-gradient(135deg,#334155,#0f172a);
     color:white;
-
     font-weight:700;
-
     cursor:pointer;
 }
 
-/* APP */
+.heart{
+    position:fixed;
+    top:-50px;
+    pointer-events:none;
+    z-index:999999;
+    animation:heartFall linear forwards;
+}
+
+@keyframes heartFall{
+    from{
+        transform:translateY(-50px) rotate(0deg);
+        opacity:1;
+    }
+    to{
+        transform:translateY(110vh) rotate(360deg);
+        opacity:0;
+    }
+}
 
 .app{
     width:100%;
     height:100dvh;
-
     display:flex;
     flex-direction:column;
 }
 
-/* TOPBAR */
-
 .topbar{
-
     height:72px;
-
-    background:
-    rgba(15,23,42,.58);
-
-    backdrop-filter:
-    blur(18px);
-
-    border-bottom:
-    1px solid rgba(255,255,255,.05);
-
+    background:rgba(15,23,42,.58);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(255,255,255,.05);
     display:flex;
     align-items:center;
     justify-content:space-between;
-
     padding:0 16px;
 }
 
@@ -286,23 +190,13 @@ body::before{
 }
 
 .logo{
-
     width:50px;
     height:50px;
-
     border-radius:18px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #2563eb,
-        #7c3aed
-    );
-
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
     display:flex;
     align-items:center;
     justify-content:center;
-
     font-size:22px;
 }
 
@@ -328,55 +222,29 @@ body::before{
 }
 
 .top-btn{
-
     border:none;
-
     color:white;
-
     height:44px;
-
     padding:0 16px;
-
     border-radius:14px;
-
     cursor:pointer;
-
     font-weight:700;
 }
 
 .next-btn{
-
-    background:
-    linear-gradient(
-        135deg,
-        #dc2626,
-        #b91c1c
-    );
+    background:linear-gradient(135deg,#dc2626,#b91c1c);
 }
 
 .logout-btn{
-
-    background:
-    linear-gradient(
-        135deg,
-        #334155,
-        #0f172a
-    );
+    background:linear-gradient(135deg,#334155,#0f172a);
 }
 
-/* MESSAGE */
-
 .messages{
-
     flex:1;
-
     overflow-y:auto;
-
     padding:16px;
-
     display:flex;
     flex-direction:column;
-
     gap:12px;
 }
 
@@ -399,107 +267,62 @@ body::before{
 }
 
 .avatar{
-
     width:42px;
     height:42px;
-
     border-radius:50%;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
     font-size:22px;
-
     flex-shrink:0;
-
-    border:
-    2px solid rgba(255,255,255,.15);
+    border:2px solid rgba(255,255,255,.15);
 }
 
 .msg{
-
     max-width:82%;
-
-    background:
-    rgba(30,41,59,.6);
-
-    backdrop-filter:
-    blur(12px);
-
+    background:rgba(30,41,59,.6);
+    backdrop-filter:blur(12px);
     padding:12px;
-
     border-radius:22px;
-
-    border:
-    1px solid rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.04);
 }
 
 .row.me .msg{
-
-    background:
-    linear-gradient(
-        135deg,
-        #2563eb,
-        #7c3aed
-    );
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
 }
 
 .username{
-
     font-size:12px;
-
     font-weight:700;
-
     margin-bottom:6px;
-
     color:#cbd5e1;
 }
 
 .text{
-
     font-size:15px;
-
     line-height:1.55;
-
     word-break:break-word;
 }
 
 .link{
-
     color:#93c5fd;
-
     text-decoration:none;
-
     font-weight:600;
-
     word-break:break-all;
 }
 
 .chat-image{
-
     width:100%;
-
     max-width:260px;
-
     border-radius:16px;
-
     cursor:pointer;
+    margin-top:8px;
 }
 
-/* BOTTOM */
-
 .bottom{
-
-    background:
-    rgba(15,23,42,.58);
-
-    backdrop-filter:
-    blur(18px);
-
-    border-top:
-    1px solid rgba(255,255,255,.05);
-
+    background:rgba(15,23,42,.58);
+    backdrop-filter:blur(18px);
+    border-top:1px solid rgba(255,255,255,.05);
     padding:10px;
 }
 
@@ -510,186 +333,101 @@ body::before{
 
 .image-btn,
 .send-btn{
-
     width:52px;
     height:52px;
-
     border:none;
-
     border-radius:16px;
-
-    background:
-    linear-gradient(
-        135deg,
-        #2563eb,
-        #7c3aed
-    );
-
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
     color:white;
-
     display:flex;
     align-items:center;
     justify-content:center;
-
     cursor:pointer;
-
     font-size:18px;
 }
 
 .send-input{
-
     flex:1;
-
     border:none;
     outline:none;
-
-    background:
-    rgba(255,255,255,.06);
-
+    background:rgba(255,255,255,.06);
     color:white;
-
     padding:0 14px;
-
     border-radius:16px;
-
     font-size:16px;
 }
 
-/* IMAGE VIEW */
-
 .image-viewer{
-
     position:fixed;
     inset:0;
-
-    background:
-    rgba(0,0,0,.95);
-
+    background:rgba(0,0,0,.95);
     display:none;
-
     justify-content:center;
     align-items:center;
-
     z-index:999999;
 }
 
 .viewer-image{
-
     max-width:100%;
     max-height:100%;
-
     border-radius:18px;
 }
-
 </style>
 </head>
-
 <body>
 
-<!-- AUTH -->
-
 <div class="auth-screen" id="authScreen">
-
     <div class="auth-box">
+        <div class="auth-title">✦ Nova Stranger</div>
 
-        <div class="auth-title">
-            ✦ Nova Stranger
-        </div>
+        <input id="username" placeholder="Tên tài khoản">
+        <input id="password" type="password" placeholder="Mật khẩu">
 
-        <input
-            id="username"
-            placeholder="Tên tài khoản"
-        >
-
-        <input
-            id="password"
-            type="password"
-            placeholder="Mật khẩu"
-        >
-
-        <button
-            class="auth-btn"
-            id="loginBtn"
-        >
+        <button class="auth-btn" id="loginBtn">
             Đăng nhập
         </button>
 
-        <button
-            class="auth-btn"
-            id="registerBtn"
-        >
+        <button class="auth-btn" id="registerBtn">
             Tạo tài khoản
         </button>
-
     </div>
-
 </div>
 
-<!-- FINDING -->
-
 <div class="finding" id="finding">
-
     <div class="loader"></div>
 
-    <div
-    style="
-    font-size:26px;
-    font-weight:800;
-    ">
+    <div style="font-size:26px;font-weight:800;">
         Đang tìm người lạ...
     </div>
 
-    <button
-        id="findingLogoutBtn"
-        class="finding-logout"
-    >
+    <button id="findingLogoutBtn" class="finding-logout">
         Logout
     </button>
-
 </div>
-
-<!-- APP -->
 
 <div class="app">
 
     <div class="topbar">
 
         <div class="top-left">
-
-            <div class="logo">
-                ✦
-            </div>
+            <div class="logo">✦</div>
 
             <div class="info">
+                <div class="title">Nova Stranger</div>
 
-                <div class="title">
-                    Nova Stranger
-                </div>
-
-                <div
-                    class="status"
-                    id="status"
-                >
+                <div class="status" id="status">
                     ● Offline
                 </div>
-
             </div>
-
         </div>
 
         <div class="top-actions">
 
-            <button
-                id="logoutBtn"
-                class="top-btn logout-btn"
-            >
+            <button id="logoutBtn" class="top-btn logout-btn">
                 Logout
             </button>
 
-            <button
-                id="nextBtn"
-                class="top-btn next-btn"
-            >
+            <button id="nextBtn" class="top-btn next-btn">
                 Next
             </button>
 
@@ -697,39 +435,21 @@ body::before{
 
     </div>
 
-    <div
-        id="messages"
-        class="messages"
-    ></div>
+    <div id="messages" class="messages"></div>
 
     <div class="bottom">
 
         <div class="sendbox">
 
-            <label
-                class="image-btn"
-                for="imageInput"
-            >
+            <label class="image-btn" for="imageInput">
                 📷
             </label>
 
-            <input
-                type="file"
-                id="imageInput"
-                accept="image/*"
-                hidden
-            >
+            <input type="file" id="imageInput" accept="image/*" hidden>
 
-            <input
-                id="messageInput"
-                class="send-input"
-                placeholder="Nhắn gì đó..."
-            >
+            <input id="messageInput" class="send-input" placeholder="Nhắn gì đó...">
 
-            <button
-                id="sendBtn"
-                class="send-btn"
-            >
+            <button id="sendBtn" class="send-btn">
                 ➤
             </button>
 
@@ -739,18 +459,8 @@ body::before{
 
 </div>
 
-<!-- IMAGE VIEW -->
-
-<div
-    id="imageViewer"
-    class="image-viewer"
->
-
-    <img
-        id="viewerImage"
-        class="viewer-image"
-    >
-
+<div id="imageViewer" class="image-viewer">
+    <img id="viewerImage" class="viewer-image">
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -760,70 +470,36 @@ body::before{
 
 firebase.initializeApp({
 
-apiKey: "AIzaSyBjfGiX1GIhztCOclVrrW1Y-Pt4-Lur5vg",
-authDomain: "quanlyduan-466a8.firebaseapp.com",
-databaseURL: "https://quanlyduan-466a8-default-rtdb.asia-southeast1.firebasedatabase.app",
-projectId: "quanlyduan-466a8",
-storageBucket: "quanlyduan-466a8.firebasestorage.app",
-messagingSenderId: "137443244362",
-appId: "1:137443244362:web:0cc219d93445d0d24269b3",
+apiKey: "YOUR_API_KEY",
+authDomain: "YOUR_PROJECT.firebaseapp.com",
+databaseURL: "YOUR_DATABASE_URL",
+projectId: "YOUR_PROJECT_ID",
+storageBucket: "YOUR_PROJECT.appspot.com",
+messagingSenderId: "123456",
+appId: "YOUR_APP_ID",
 
 });
 
 const db = firebase.database();
 
-const authScreen =
-document.getElementById("authScreen");
+const authScreen = document.getElementById("authScreen");
+const usernameInput = document.getElementById("username");
+const passwordInput = document.getElementById("password");
+const loginBtn = document.getElementById("loginBtn");
+const registerBtn = document.getElementById("registerBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const findingLogoutBtn = document.getElementById("findingLogoutBtn");
+const messages = document.getElementById("messages");
+const sendBtn = document.getElementById("sendBtn");
+const nextBtn = document.getElementById("nextBtn");
+const messageInput = document.getElementById("messageInput");
+const statusEl = document.getElementById("status");
+const finding = document.getElementById("finding");
+const imageInput = document.getElementById("imageInput");
+const imageViewer = document.getElementById("imageViewer");
+const viewerImage = document.getElementById("viewerImage");
 
-const usernameInput =
-document.getElementById("username");
-
-const passwordInput =
-document.getElementById("password");
-
-const loginBtn =
-document.getElementById("loginBtn");
-
-const registerBtn =
-document.getElementById("registerBtn");
-
-const logoutBtn =
-document.getElementById("logoutBtn");
-
-const findingLogoutBtn =
-document.getElementById("findingLogoutBtn");
-
-const messages =
-document.getElementById("messages");
-
-const sendBtn =
-document.getElementById("sendBtn");
-
-const nextBtn =
-document.getElementById("nextBtn");
-
-const messageInput =
-document.getElementById("messageInput");
-
-const statusEl =
-document.getElementById("status");
-
-const finding =
-document.getElementById("finding");
-
-const imageInput =
-document.getElementById("imageInput");
-
-const imageViewer =
-document.getElementById("imageViewer");
-
-const viewerImage =
-document.getElementById("viewerImage");
-
-const animals = [
-"🐶","🐱","🦊","🐼","🐸",
-"🐵","🐰","🦁","🐯","🐨"
-];
+const animals = ["🐶","🐱","🦊","🐼","🐸","🐵","🐰","🦁","🐯","🐨"];
 
 const avatarColors = [
 "linear-gradient(135deg,#2563eb,#7c3aed)",
@@ -832,249 +508,134 @@ const avatarColors = [
 "linear-gradient(135deg,#f97316,#ef4444)"
 ];
 
-let myAnimal =
-localStorage.getItem("nova_animal");
-
-let myAvatarColor =
-localStorage.getItem("nova_avatar_color");
+let myAnimal = localStorage.getItem("nova_animal");
+let myAvatarColor = localStorage.getItem("nova_avatar_color");
 
 if(!myAnimal){
-
-    myAnimal =
-    animals[
-        Math.floor(
-            Math.random()*animals.length
-        )
-    ];
-
-    localStorage.setItem(
-        "nova_animal",
-        myAnimal
-    );
+    myAnimal = animals[Math.floor(Math.random()*animals.length)];
+    localStorage.setItem("nova_animal",myAnimal);
 }
 
 if(!myAvatarColor){
-
-    myAvatarColor =
-    avatarColors[
-        Math.floor(
-            Math.random()*avatarColors.length
-        )
-    ];
-
-    localStorage.setItem(
-        "nova_avatar_color",
-        myAvatarColor
-    );
+    myAvatarColor = avatarColors[Math.floor(Math.random()*avatarColors.length)];
+    localStorage.setItem("nova_avatar_color",myAvatarColor);
 }
 
-let myId =
-localStorage.getItem(
-    "nova_user_id"
-);
-
-let myUsername =
-localStorage.getItem(
-    "nova_username"
-);
-
-let loggedIn =
-localStorage.getItem(
-    "nova_logged_in"
-);
+let myId = localStorage.getItem("nova_user_id");
+let myUsername = localStorage.getItem("nova_username");
+let loggedIn = localStorage.getItem("nova_logged_in");
 
 let roomId = null;
 let loaded = false;
 
-/* SAFE */
-
 function safe(text){
-
     return String(text)
-
     .replace(/</g,"&lt;")
-
     .replace(/>/g,"&gt;");
 }
 
-/* LINK */
-
 function linkify(text){
 
-    const urlRegex =
-    /((https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/\S*)?)/g;
+    const urlRegex = /((https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/\S*)?)/g;
 
     return safe(text)
-
     .replace(urlRegex,(url)=>{
 
         let href = url;
 
         if(!href.startsWith("http")){
-
-            href =
-            "https://" + href;
+            href = "https://" + href;
         }
 
         return `
-        <a
-            href="${href}"
-            target="_blank"
-            class="link"
-        >
+        <a href="${href}" target="_blank" class="link">
             🔗 ${url}
         </a>
         `;
     });
 }
 
-/* REGISTER */
+registerBtn.onclick = async ()=>{
 
-registerBtn.onclick =
-async ()=>{
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
 
-    const username =
-    usernameInput.value.trim();
-
-    const password =
-    passwordInput.value.trim();
-
-    if(
-        !username ||
-        !password
-    ){
-
+    if(!username || !password){
         return alert("Nhập đủ đi 😭");
     }
 
-    const snap =
-    await db.ref("users")
+    const snap = await db.ref("users")
     .orderByChild("username")
     .equalTo(username)
     .once("value");
 
     if(snap.exists()){
-
-        return alert(
-            "Tên tồn tại 😭"
-        );
+        return alert("Tên tồn tại 😭");
     }
 
-    const uid =
-    "user_" +
-    Math.random()
-    .toString(36)
-    .slice(2);
+    const uid = "user_" + Math.random().toString(36).slice(2);
 
-    await db.ref(
-        "users/" + uid
-    ).set({
-
+    await db.ref("users/" + uid).set({
         username,
         password,
-        createdAt:
-        Date.now()
-
+        createdAt:Date.now()
     });
 
-    alert(
-        "Tạo tài khoản thành công ✨"
-    );
+    alert("Tạo tài khoản thành công ✨");
 };
 
-/* LOGIN */
+loginBtn.onclick = async ()=>{
 
-loginBtn.onclick =
-async ()=>{
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
 
-    const username =
-    usernameInput.value.trim();
-
-    const password =
-    passwordInput.value.trim();
-
-    const snap =
-    await db.ref("users")
+    const snap = await db.ref("users")
     .orderByChild("username")
     .equalTo(username)
     .once("value");
 
     if(!snap.exists()){
-
-        return alert(
-            "Không tồn tại 😭"
-        );
+        return alert("Không tồn tại 😭");
     }
 
     let ok = false;
 
     snap.forEach((s)=>{
 
-        const data =
-        s.val();
+        const data = s.val();
 
-        if(
-            data.password === password
-        ){
+        if(data.password === password){
 
             ok = true;
-
             myId = s.key;
-
-            myUsername =
-            data.username;
+            myUsername = data.username;
         }
-
     });
 
     if(!ok){
-
-        return alert(
-            "Sai mật khẩu 😭"
-        );
+        return alert("Sai mật khẩu 😭");
     }
 
-    localStorage.setItem(
-        "nova_user_id",
-        myId
-    );
+    localStorage.setItem("nova_user_id",myId);
+    localStorage.setItem("nova_username",myUsername);
+    localStorage.setItem("nova_logged_in","1");
 
-    localStorage.setItem(
-        "nova_username",
-        myUsername
-    );
-
-    localStorage.setItem(
-        "nova_logged_in",
-        "1"
-    );
-
-    authScreen.style.display =
-    "none";
+    authScreen.style.display = "none";
 
     await loadMyMessages();
 
     startSystem();
 };
 
-/* AUTO LOGIN */
-
 async function autoLogin(){
 
-    if(
-        !myId ||
-        !loggedIn
-    ) return;
+    if(!myId || !loggedIn) return;
 
-    const snap =
-    await db.ref(
-        "users/" + myId
-    ).once("value");
+    const snap = await db.ref("users/" + myId).once("value");
 
     if(snap.exists()){
 
-        authScreen.style.display =
-        "none";
+        authScreen.style.display = "none";
 
         await loadMyMessages();
 
@@ -1084,235 +645,142 @@ async function autoLogin(){
 
 autoLogin();
 
-/* LOAD ACCOUNT MESSAGES */
-
 async function loadMyMessages(){
 
-    const snap =
-    await db.ref(
+    const snap = await db.ref("user_messages/" + myId).once("value");
 
-        "user_messages/" +
-        myId
-
-    ).once("value");
-
-    if(!snap.exists())
-    return;
+    if(!snap.exists()) return;
 
     messages.innerHTML = "";
 
     snap.forEach((s)=>{
-
-        renderMessage(
-            s.val(),
-            true
-        );
-
+        renderMessage(s.val(),true);
     });
 
-    messages.scrollTop =
-    messages.scrollHeight;
+    messages.scrollTop = messages.scrollHeight;
 }
-
-/* START */
 
 async function startSystem(){
 
-    roomId =
-    localStorage.getItem(
-        "nova_room_" + myId
-    );
+    roomId = localStorage.getItem("nova_room_" + myId);
 
-    const ok =
-    await restoreRoom();
+    const ok = await restoreRoom();
 
     if(!ok){
-
         findPartner();
     }
 }
 
-/* RESTORE */
-
 async function restoreRoom(){
 
-    if(!roomId)
-    return false;
+    if(!roomId) return false;
 
-    const snap =
-    await db.ref(
-        "rooms/" + roomId
-    ).once("value");
+    const snap = await db.ref("rooms/" + roomId).once("value");
 
     if(snap.exists()){
-
         startChat();
-
         return true;
     }
 
     return false;
 }
 
-/* FIND */
-
 async function findPartner(){
 
-    finding.style.display =
-    "flex";
+    finding.style.display = "flex";
 
-    const waitingRef =
-    db.ref("waitingUsers");
-
-    const snap =
-    await waitingRef.once("value");
+    const waitingRef = db.ref("waitingUsers");
+    const snap = await waitingRef.once("value");
 
     let found = null;
 
     snap.forEach((s)=>{
 
-        if(
-            s.key !== myId &&
-            !found
-        ){
-
+        if(s.key !== myId && !found){
             found = s.key;
         }
     });
 
     if(found){
 
-        roomId =
-        "room_" +
-        Date.now();
+        roomId = "room_" + Date.now();
 
         localStorage.setItem(
             "nova_room_" + myId,
             roomId
         );
 
-        await db.ref(
-            "rooms/" + roomId
-        ).set({
-
+        await db.ref("rooms/" + roomId).set({
             users:{
                 a:myId,
                 b:found
             },
-
-            createdAt:
-            Date.now()
-
+            createdAt:Date.now()
         });
 
-        await waitingRef
-        .child(found)
-        .remove();
+        await waitingRef.child(found).remove();
 
         startChat();
 
     }else{
 
-        await waitingRef
-        .child(myId)
-        .set({
-
+        await waitingRef.child(myId).set({
             time:Date.now()
         });
 
-        waitingRef.on(
+        waitingRef.on("child_removed",async (s)=>{
 
-            "child_removed",
+            if(s.key === myId){
 
-            async (s)=>{
+                const rooms = await db.ref("rooms").once("value");
 
-                if(
-                    s.key === myId
-                ){
+                rooms.forEach((r)=>{
 
-                    const rooms =
-                    await db.ref(
-                        "rooms"
-                    ).once("value");
+                    const d = r.val();
 
-                    rooms.forEach((r)=>{
-
-                        const d =
-                        r.val();
-
-                        if(
-
-                            d.users &&
-
-                            (
-                                d.users.a === myId ||
-
-                                d.users.b === myId
-                            )
-
-                        ){
-
-                            roomId =
-                            r.key;
-                        }
-
-                    });
-
-                    if(roomId){
-
-                        localStorage.setItem(
-                            "nova_room_" + myId,
-                            roomId
-                        );
-
-                        startChat();
+                    if(
+                        d.users &&
+                        (
+                            d.users.a === myId ||
+                            d.users.b === myId
+                        )
+                    ){
+                        roomId = r.key;
                     }
+                });
 
+                if(roomId){
+
+                    localStorage.setItem(
+                        "nova_room_" + myId,
+                        roomId
+                    );
+
+                    startChat();
                 }
-
             }
-
-        );
-
+        });
     }
-
 }
 
-/* RENDER */
+function renderMessage(data,forceMe=false){
 
-function renderMessage(
-    data,
-    forceMe = false
-){
-
-    const row =
-    document.createElement(
-        "div"
-    );
+    const row = document.createElement("div");
 
     row.className =
-
-        "row " +
-
-        (
-            data.user === myId ||
-            forceMe
-            ? "me"
-            : ""
-        );
+    "row " +
+    (
+        data.user === myId ||
+        forceMe
+        ? "me"
+        : ""
+    );
 
     row.innerHTML = `
 
     <div class="msg-wrap">
 
-        <div
-            class="avatar"
-
-            style="
-            background:
-            ${data.avatarColor}
-            "
-        >
+        <div class="avatar" style="background:${data.avatarColor}">
             ${data.animal}
         </div>
 
@@ -1341,11 +809,7 @@ function renderMessage(
                 <img
                     src="${data.image}"
                     class="chat-image"
-                    onclick="
-                        openImageViewer(
-                            '${data.image}'
-                        )
-                    "
+                    onclick="openImageViewer('${data.image}')"
                 >
                 `
                 :
@@ -1358,205 +822,130 @@ function renderMessage(
 
     `;
 
-    messages.appendChild(
-        row
-    );
+    messages.appendChild(row);
 
-    messages.scrollTop =
-    messages.scrollHeight;
+    messages.scrollTop = messages.scrollHeight;
 }
-
-/* CHAT */
 
 function startChat(){
 
-    if(loaded)
-    return;
+    if(loaded) return;
 
     loaded = true;
 
-    finding.style.display =
-    "none";
+    finding.style.display = "none";
 
-    statusEl.innerHTML =
-    "● Đã kết nối";
+    statusEl.innerHTML = "● Đã kết nối";
 
-    db.ref(
-
-        "rooms/" +
-        roomId +
-        "/messages"
-
-    ).on(
-
-        "child_added",
-
-        (snapshot)=>{
-
-            const data =
-            snapshot.val();
-
-            renderMessage(data);
-
-        }
-
+    const onlineRef = db.ref(
+        "rooms/" + roomId + "/online/" + myId
     );
 
-}
+    onlineRef.set(true);
 
-/* SEND */
+    onlineRef.onDisconnect().remove();
+
+    db.ref("rooms/" + roomId + "/online")
+    .on("value",(snap)=>{
+
+        const online = snap.val();
+
+        if(
+            online &&
+            Object.keys(online).length >= 2
+        ){
+            statusEl.innerHTML = "● Đã kết nối";
+        }else{
+            statusEl.innerHTML = "● Người kia đã thoát 😢";
+        }
+    });
+
+    db.ref("rooms/" + roomId + "/messages")
+    .on("child_added",(snapshot)=>{
+
+        const data = snapshot.val();
+
+        renderMessage(data);
+    });
+}
 
 function sendMessage(){
 
-    const text =
-    messageInput.value.trim();
+    const text = messageInput.value.trim();
 
-    if(
-        !text ||
-        !roomId
-    ) return;
+    if(!text || !roomId) return;
 
     const msgData = {
-
         text:text,
-
-        username:
-        myUsername,
-
+        username:myUsername,
         user:myId,
-
         animal:myAnimal,
-
-        avatarColor:
-        myAvatarColor,
-
-        roomId:
-        roomId,
-
+        avatarColor:myAvatarColor,
+        roomId:roomId,
         time:Date.now()
-
     };
 
-    db.ref(
+    db.ref("rooms/" + roomId + "/messages")
+    .push(msgData);
 
-        "rooms/" +
-        roomId +
-        "/messages"
-
-    ).push(msgData);
-
-    db.ref(
-
-        "user_messages/" +
-        myId
-
-    ).push(msgData);
+    db.ref("user_messages/" + myId)
+    .push(msgData);
 
     messageInput.value = "";
 }
 
-sendBtn.onclick =
-sendMessage;
+sendBtn.onclick = sendMessage;
 
-/* ENTER */
+messageInput.addEventListener("keydown",(e)=>{
 
-messageInput.addEventListener(
+    if(e.key === "Enter"){
+        sendMessage();
+    }
+});
 
-    "keydown",
+imageInput.addEventListener("change",()=>{
 
-    (e)=>{
+    const file = imageInput.files[0];
 
-        if(e.key === "Enter"){
+    if(!file) return;
 
-            sendMessage();
-        }
-
+    if(file.size > 1024 * 300){
+        alert("Ảnh quá lớn 😭");
+        return;
     }
 
-);
+    const reader = new FileReader();
 
-/* IMAGE */
+    reader.onload = function(e){
 
-imageInput.addEventListener(
-
-    "change",
-
-    ()=>{
-
-        const file =
-        imageInput.files[0];
-
-        if(!file)
-        return;
-
-        if(
-            file.size >
-            1024 * 300
-        ){
-
-            alert("Ảnh quá lớn 😭");
-
-            return;
-        }
-
-        const reader =
-        new FileReader();
-
-        reader.onload =
-
-        function(e){
-
-            const msgData = {
-
-                image:
-                e.target.result,
-
-                username:
-                myUsername,
-
-                user:myId,
-
-                animal:myAnimal,
-
-                avatarColor:
-                myAvatarColor,
-
-                roomId:
-                roomId,
-
-                time:Date.now()
-
-            };
-
-            db.ref(
-
-                "rooms/" +
-                roomId +
-                "/messages"
-
-            ).push(msgData);
-
-            db.ref(
-
-                "user_messages/" +
-                myId
-
-            ).push(msgData);
-
+        const msgData = {
+            image:e.target.result,
+            username:myUsername,
+            user:myId,
+            animal:myAnimal,
+            avatarColor:myAvatarColor,
+            roomId:roomId,
+            time:Date.now()
         };
 
-        reader.readAsDataURL(
-            file
-        );
+        db.ref("rooms/" + roomId + "/messages")
+        .push(msgData);
 
+        db.ref("user_messages/" + myId)
+        .push(msgData);
+    };
+
+    reader.readAsDataURL(file);
+});
+
+nextBtn.onclick = async function(){
+
+    if(roomId){
+
+        await db.ref(
+            "rooms/" + roomId + "/online/" + myId
+        ).remove();
     }
-
-);
-
-/* NEXT */
-
-nextBtn.onclick =
-async function(){
 
     localStorage.removeItem(
         "nova_room_" + myId
@@ -1565,52 +954,66 @@ async function(){
     location.reload();
 };
 
-/* LOGOUT */
+async function logoutNow(){
 
-function logoutNow(){
+    if(roomId){
 
-    localStorage.removeItem(
-        "nova_logged_in"
-    );
+        await db.ref(
+            "rooms/" + roomId + "/online/" + myId
+        ).remove();
+    }
 
-    localStorage.removeItem(
-        "nova_user_id"
-    );
-
-    localStorage.removeItem(
-        "nova_username"
-    );
+    localStorage.removeItem("nova_logged_in");
+    localStorage.removeItem("nova_user_id");
+    localStorage.removeItem("nova_username");
 
     location.reload();
 }
 
-logoutBtn.onclick =
-logoutNow;
+logoutBtn.onclick = logoutNow;
+findingLogoutBtn.onclick = logoutNow;
 
-findingLogoutBtn.onclick =
-logoutNow;
+window.openImageViewer = function(src){
 
-/* IMAGE VIEW */
+    viewerImage.src = src;
 
-window.openImageViewer =
-
-function(src){
-
-    viewerImage.src =
-    src;
-
-    imageViewer.style.display =
-    "flex";
+    imageViewer.style.display = "flex";
 };
 
-imageViewer.onclick =
-function(){
-
-    imageViewer.style.display =
-    "none";
+imageViewer.onclick = function(){
+    imageViewer.style.display = "none";
 };
+
+setInterval(async ()=>{
+
+    const rooms = await db.ref("rooms").once("value");
+
+    rooms.forEach((room)=>{
+
+        const data = room.val();
+
+        if(
+            !data.online ||
+            Object.keys(data.online).length === 0
+        ){
+            db.ref("rooms/" + room.key).remove();
+        }
+    });
+
+},60000);
 
 </script>
-
 </body>
 </html>
+```
+
+## Firebase Rules
+
+```json
+{
+  "rules": {
+    ".read": true,
+    ".write": true
+  }
+}
+```
